@@ -15,7 +15,23 @@
   limitations under the License.
   -->
 <paths>
+    <cache-path
+        name="bingo_caches"
+        path="." />
+
+    <external-cache-path
+        name="bingo_ext_caches"
+        path="." />
+
+    <external-files-path
+        name="bingo_ext_files"
+        path="." />
+
     <external-path
-        name="my_images"
-        path="Pictures"/>
+        name="bingo_path"
+        path="." />
+
+    <files-path
+        name="bingo_file"
+        path="." />
 </paths>
