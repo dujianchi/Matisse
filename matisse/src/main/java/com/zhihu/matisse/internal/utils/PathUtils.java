@@ -90,7 +90,7 @@ public class PathUtils {
                                        String[] selectionArgs) {
 
         Cursor cursor = null;
-        final String column = "_data";
+        final String column = MediaStore.MediaColumns.DATA;
         final String[] projection = {
                 column
         };

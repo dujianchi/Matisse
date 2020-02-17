@@ -122,11 +122,12 @@ public class MediaStoreCompat {
     }
 
     private String relativePath(File file) {
-        if (!TextUtils.isEmpty(mCaptureStrategy.directory)) {
+        /*if (!TextUtils.isEmpty(mCaptureStrategy.directory)) {
             return Environment.DIRECTORY_PICTURES + File.separator + mCaptureStrategy.directory + File.separator + file.getName();
         } else {
             return Environment.DIRECTORY_PICTURES + File.separator + file.getName();
-        }
+        }*/
+        return Environment.DIRECTORY_PICTURES;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

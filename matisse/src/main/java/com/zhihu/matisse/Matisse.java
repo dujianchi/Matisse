@@ -18,6 +18,7 @@ package com.zhihu.matisse;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -86,12 +87,14 @@ public final class Matisse {
     }
 
     /**
+     * @deprecated 用uri代替path
      * Obtain user selected media path list in the starting Activity or Fragment.
      *
      * @param data Intent passed by {@link Activity#onActivityResult(int, int, Intent)} or
      *             {@link Fragment#onActivityResult(int, int, Intent)}.
      * @return User selected media path list.
      */
+    @Deprecated
     public static List<String> obtainPathResult(Intent data) {
         return data.getStringArrayListExtra(MatisseActivity.EXTRA_RESULT_SELECTION_PATH);
     }

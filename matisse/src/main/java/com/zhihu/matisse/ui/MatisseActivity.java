@@ -26,18 +26,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
@@ -57,8 +57,8 @@ import com.zhihu.matisse.internal.ui.widget.IncapableDialog;
 import com.zhihu.matisse.internal.utils.MediaStoreCompat;
 import com.zhihu.matisse.internal.utils.PathUtils;
 import com.zhihu.matisse.internal.utils.PhotoMetadataUtils;
-
 import com.zhihu.matisse.internal.utils.SingleMediaScanner;
+
 import java.util.ArrayList;
 
 /**
@@ -72,6 +72,10 @@ public class MatisseActivity extends AppCompatActivity implements
         AlbumMediaAdapter.OnPhotoCapture {
 
     public static final String EXTRA_RESULT_SELECTION = "extra_result_selection";
+    /**
+     * @deprecated 用uri代替path
+     */
+    @Deprecated
     public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
     public static final String EXTRA_RESULT_ORIGINAL_ENABLE = "extra_result_original_enable";
     private static final int REQUEST_CODE_PREVIEW = 23;
