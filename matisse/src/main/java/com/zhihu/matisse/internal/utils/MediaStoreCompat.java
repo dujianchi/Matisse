@@ -109,16 +109,16 @@ public class MediaStoreCompat {
     }
 
     private Uri createUri(File photoFile) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             return FileProvider.getUriForFile(mContext.get(),
                     mCaptureStrategy.authority, photoFile);
-        } else {
+        /*} else {
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.TITLE, photoFile.getName());
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
             values.put(MediaStore.Images.Media.RELATIVE_PATH, relativePath(photoFile));
             return mContext.get().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        }
+        }*/
     }
 
     private String relativePath(File file) {
