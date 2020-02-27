@@ -15,9 +15,14 @@
  */
 package com.zhihu.matisse.internal.utils;
 
+import android.content.Context;
 import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.core.content.FileProvider;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -45,22 +50,26 @@ final class ExifInterfaceCompat {
      * Google Play crash report system cannot perceive this crash, so this method will throw
      * {@link NullPointerException} when the filename is null.
      *
-     * @param filename a JPEG filename.
+     * @param uri a JPEG filename.
      * @return {@link ExifInterface} instance.
      * @throws IOException something wrong with I/O.
      */
-    public static ExifInterface newInstance(String filename) throws IOException {
-        if (filename == null) throw new NullPointerException("filename should not be null");
-        return new ExifInterface(filename);
+    public static ExifInterface newInstance(Context context, Uri uri, String path) throws IOException {
+        if (uri == null || context == null)
+            throw new NullPointerException("filename should not be null");
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+            return new ExifInterface(context.getContentResolver().openInputStream(uri));
+        }
+        return new ExifInterface(path);
     }
 
-    private static Date getExifDateTime(String filepath) {
+    private static Date getExifDateTime(Context context, Uri uri, String filepath) {
         ExifInterface exif;
         try {
             // ExifInterface does not check whether file path is null or not,
             // so passing null file path argument to its constructor causing SIGSEGV.
             // We should avoid such a situation by checking file path string.
-            exif = newInstance(filepath);
+            exif = newInstance(context, uri, filepath);
         } catch (IOException ex) {
             Log.e(TAG, "cannot read exif", ex);
             return null;
@@ -86,8 +95,8 @@ final class ExifInterfaceCompat {
      * @param filepath to get datetime
      * @return when a photo taken.
      */
-    public static long getExifDateTimeInMillis(String filepath) {
-        Date datetime = getExifDateTime(filepath);
+    public static long getExifDateTimeInMillis(Context context, Uri uri, String filepath) {
+        Date datetime = getExifDateTime(context, uri, filepath);
         if (datetime == null) {
             return -1;
         }
@@ -100,13 +109,13 @@ final class ExifInterfaceCompat {
      * @param filepath to get exif.
      * @return exif orientation value
      */
-    public static int getExifOrientation(String filepath) {
+    public static int getExifOrientation(Context context, Uri uri, String filepath) {
         ExifInterface exif;
         try {
             // ExifInterface does not check whether file path is null or not,
             // so passing null file path argument to its constructor causing SIGSEGV.
             // We should avoid such a situation by checking file path string.
-            exif = newInstance(filepath);
+            exif = newInstance(context, uri, filepath);
         } catch (IOException ex) {
             Log.e(TAG, "cannot read exif", ex);
             return EXIF_DEGREE_FALLBACK_VALUE;
