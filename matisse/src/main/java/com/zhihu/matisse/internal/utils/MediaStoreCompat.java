@@ -17,7 +17,6 @@ package com.zhihu.matisse.internal.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -115,17 +114,17 @@ public class MediaStoreCompat {
     }
 
     private Uri createUri(File photoFile) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        //if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             return FileProvider.getUriForFile(mContext.get(), mCaptureStrategy.authority, photoFile);
-        } else {
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.TITLE, photoFile.getName() + ".jpg");
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
-            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
-            //}
-            return mContext.get().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        }
+        //} else {
+        //    ContentValues values = new ContentValues();
+        //    values.put(MediaStore.Images.Media.TITLE, photoFile.getName() + ".jpg");
+        //    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+        //    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        //    values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+        //    //}
+        //    return mContext.get().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        //}
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
