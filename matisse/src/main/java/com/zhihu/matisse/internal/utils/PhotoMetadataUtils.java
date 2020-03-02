@@ -61,7 +61,7 @@ public final class PhotoMetadataUtils {
         Point imageSize = getBitmapBound(resolver, uri);
         int w = imageSize.x;
         int h = imageSize.y;
-        if (PhotoMetadataUtils.shouldRotate(resolver, uri)) {
+        if (PhotoMetadataUtils.shouldRotate(activity, resolver, uri)) {
             w = imageSize.y;
             h = imageSize.x;
         }
@@ -154,10 +154,10 @@ public final class PhotoMetadataUtils {
         return false;
     }
 
-    private static boolean shouldRotate(ContentResolver resolver, Uri uri) {
+    private static boolean shouldRotate(Context context, ContentResolver resolver, Uri uri) {
         ExifInterface exif;
         try {
-            exif = ExifInterfaceCompat.newInstance(getPath(resolver, uri));
+            exif = ExifInterfaceCompat.newInstance(context, uri, getPath(resolver, uri));
         } catch (IOException e) {
             Log.e(TAG, "could not read exif info of the image: " + uri);
             return false;
