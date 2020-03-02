@@ -208,12 +208,12 @@ public class MatisseActivity extends AppCompatActivity implements
                 Intent result = new Intent();
                 ArrayList<Uri> selectedUris = new ArrayList<>();
 //                ArrayList<String> selectedPaths = new ArrayList<>();
-//                if (selected != null) {
-//                    for (Item item : selected) {
-//                        selectedUris.add(item.getContentUri());
-//                        selectedPaths.add(PathUtils.getPath(this, item.getContentUri()));
-//                    }
-//                }
+                if (selected != null) {
+                    for (Item item : selected) {
+                        selectedUris.add(item.getContentUri());
+                        //selectedPaths.add(PathUtils.getPath(this, item.getContentUri()));
+                    }
+                }
                 result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
 //                result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
                 result.putExtra(EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
