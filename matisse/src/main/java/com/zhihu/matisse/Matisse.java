@@ -86,18 +86,18 @@ public final class Matisse {
         return data.getParcelableArrayListExtra(MatisseActivity.EXTRA_RESULT_SELECTION);
     }
 
-    /**
-     * @deprecated 用uri代替path
-     * Obtain user selected media path list in the starting Activity or Fragment.
-     *
-     * @param data Intent passed by {@link Activity#onActivityResult(int, int, Intent)} or
-     *             {@link Fragment#onActivityResult(int, int, Intent)}.
-     * @return User selected media path list.
-     */
-    @Deprecated
-    public static List<String> obtainPathResult(Intent data) {
-        return data.getStringArrayListExtra(MatisseActivity.EXTRA_RESULT_SELECTION_PATH);
-    }
+//    /**
+//     * @deprecated 用uri代替path
+//     * Obtain user selected media path list in the starting Activity or Fragment.
+//     *
+//     * @param data Intent passed by {@link Activity#onActivityResult(int, int, Intent)} or
+//     *             {@link Fragment#onActivityResult(int, int, Intent)}.
+//     * @return User selected media path list.
+//     */
+//    @Deprecated
+//    public static List<String> obtainPathResult(Intent data) {
+//        return data.getStringArrayListExtra(MatisseActivity.EXTRA_RESULT_SELECTION_PATH);
+//    }
 
     /**
      * Obtain state whether user decide to use selected media in original

@@ -55,7 +55,6 @@ import com.zhihu.matisse.internal.ui.widget.AlbumsSpinner;
 import com.zhihu.matisse.internal.ui.widget.CheckRadioView;
 import com.zhihu.matisse.internal.ui.widget.IncapableDialog;
 import com.zhihu.matisse.internal.utils.MediaStoreCompat;
-import com.zhihu.matisse.internal.utils.PathUtils;
 import com.zhihu.matisse.internal.utils.PhotoMetadataUtils;
 import com.zhihu.matisse.internal.utils.SingleMediaScanner;
 
@@ -72,11 +71,11 @@ public class MatisseActivity extends AppCompatActivity implements
         AlbumMediaAdapter.OnPhotoCapture {
 
     public static final String EXTRA_RESULT_SELECTION = "extra_result_selection";
-    /**
-     * @deprecated 用uri代替path
-     */
-    @Deprecated
-    public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
+    //    /**
+//     * @deprecated 用uri代替path
+//     */
+//    @Deprecated
+//    public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
     public static final String EXTRA_RESULT_ORIGINAL_ENABLE = "extra_result_original_enable";
     private static final int REQUEST_CODE_PREVIEW = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
@@ -205,15 +204,15 @@ public class MatisseActivity extends AppCompatActivity implements
             if (data.getBooleanExtra(BasePreviewActivity.EXTRA_RESULT_APPLY, false)) {
                 Intent result = new Intent();
                 ArrayList<Uri> selectedUris = new ArrayList<>();
-                ArrayList<String> selectedPaths = new ArrayList<>();
-                if (selected != null) {
-                    for (Item item : selected) {
-                        selectedUris.add(item.getContentUri());
-                        selectedPaths.add(PathUtils.getPath(this, item.getContentUri()));
-                    }
-                }
+//                ArrayList<String> selectedPaths = new ArrayList<>();
+//                if (selected != null) {
+//                    for (Item item : selected) {
+//                        selectedUris.add(item.getContentUri());
+//                        selectedPaths.add(PathUtils.getPath(this, item.getContentUri()));
+//                    }
+//                }
                 result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
-                result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+//                result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
                 result.putExtra(EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
                 setResult(RESULT_OK, result);
                 finish();
@@ -232,21 +231,31 @@ public class MatisseActivity extends AppCompatActivity implements
             String path = mMediaStoreCompat.getCurrentPhotoPath();
             ArrayList<Uri> selected = new ArrayList<>();
             selected.add(contentUri);
-            ArrayList<String> selectedPath = new ArrayList<>();
-            selectedPath.add(path);
+//            ArrayList<String> selectedPath = new ArrayList<>();
+//            selectedPath.add(path);
             Intent result = new Intent();
             result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selected);
-            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPath);
+//            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPath);
             setResult(RESULT_OK, result);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
                 MatisseActivity.this.revokeUriPermission(contentUri,
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-            new SingleMediaScanner(this.getApplicationContext(), path, new SingleMediaScanner.ScanListener() {
-                @Override public void onScanFinish() {
-                    Log.i("SingleMediaScanner", "scan finish!");
-                }
-            });
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                new SingleMediaScanner(this.getApplicationContext(), path, new SingleMediaScanner.ScanListener() {
+                    @Override
+                    public void onScanFinish() {
+                        Log.i("SingleMediaScanner", "scan finish!");
+                    }
+                });
+            } /*else {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.TITLE, path.substring(path.lastIndexOf('/') + 1));
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+                values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+                Uri insert = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                Log.i("insert", "insert to " + insert);
+            }*/
             finish();
         }
     }
@@ -324,8 +333,8 @@ public class MatisseActivity extends AppCompatActivity implements
             Intent result = new Intent();
             ArrayList<Uri> selectedUris = (ArrayList<Uri>) mSelectedCollection.asListOfUri();
             result.putParcelableArrayListExtra(EXTRA_RESULT_SELECTION, selectedUris);
-            ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
-            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
+//            ArrayList<String> selectedPaths = (ArrayList<String>) mSelectedCollection.asListOfString();
+//            result.putStringArrayListExtra(EXTRA_RESULT_SELECTION_PATH, selectedPaths);
             result.putExtra(EXTRA_RESULT_ORIGINAL_ENABLE, mOriginalEnable);
             setResult(RESULT_OK, result);
             finish();
@@ -412,7 +421,7 @@ public class MatisseActivity extends AppCompatActivity implements
 
         if (mSpec.onSelectedListener != null) {
             mSpec.onSelectedListener.onSelected(
-                    mSelectedCollection.asListOfUri(), mSelectedCollection.asListOfString());
+                    mSelectedCollection.asListOfUri());
         }
     }
 

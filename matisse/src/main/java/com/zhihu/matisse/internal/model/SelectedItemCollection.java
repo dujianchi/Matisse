@@ -25,7 +25,6 @@ import com.zhihu.matisse.internal.entity.IncapableCause;
 import com.zhihu.matisse.internal.entity.Item;
 import com.zhihu.matisse.internal.entity.SelectionSpec;
 import com.zhihu.matisse.internal.ui.widget.CheckView;
-import com.zhihu.matisse.internal.utils.PathUtils;
 import com.zhihu.matisse.internal.utils.PhotoMetadataUtils;
 
 import java.util.ArrayList;
@@ -148,14 +147,6 @@ public class SelectedItemCollection {
             uris.add(item.getContentUri());
         }
         return uris;
-    }
-
-    public List<String> asListOfString() {
-        List<String> paths = new ArrayList<>();
-        for (Item item : mItems) {
-            paths.add(PathUtils.getPath(mContext, item.getContentUri()));
-        }
-        return paths;
     }
 
     public boolean isEmpty() {

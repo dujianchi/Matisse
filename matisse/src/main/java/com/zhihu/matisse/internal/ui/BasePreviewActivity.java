@@ -19,15 +19,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.viewpager.widget.ViewPager;
 
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.IncapableCause;
@@ -139,7 +140,7 @@ public abstract class BasePreviewActivity extends AppCompatActivity implements V
 
                 if (mSpec.onSelectedListener != null) {
                     mSpec.onSelectedListener.onSelected(
-                            mSelectedCollection.asListOfUri(), mSelectedCollection.asListOfString());
+                            mSelectedCollection.asListOfUri());
                 }
             }
         });

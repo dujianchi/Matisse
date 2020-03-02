@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,15 +33,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.engine.impl.PicassoEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
-import java.io.File;
 import java.util.List;
 
 public class SampleActivity extends AppCompatActivity implements View.OnClickListener {
@@ -95,8 +95,8 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                         .thumbnailScale(0.85f)
                         .imageEngine(new GlideEngine())
-                        .setOnSelectedListener((uriList, pathList) -> {
-                            Log.e("onSelected", "onSelected: pathList=" + pathList);
+                        .setOnSelectedListener((uriList) -> {
+                            Log.e("onSelected", "onSelected: pathList=" + uriList);
                         })
                         .showSingleMediaType(true)
                         .originalEnable(true)
@@ -116,7 +116,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .maxSelectable(9)
                         .originalEnable(true)
                         .maxOriginalSize(10)
-                        .imageEngine(new PicassoEngine())
+                        .imageEngine(new GlideEngine())
                         .forResult(REQUEST_CODE_CHOOSE);
                 break;
             case R.id.only_gif:
@@ -139,20 +139,14 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
             default:
                 break;
         }
-        mAdapter.setData(null, null);
+        mAdapter.setData(null);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
-            PickerHelper.getResult(this, data, new PickerHelper.OnCompressedCallback() {
-                @Override
-                public void onCompressed(List<File> result) {
-                    System.out.println(result);
-                }
-            });
-            //mAdapter.setData(Matisse.obtainResult(data), Matisse.obtainPathResult(data));
+            mAdapter.setData(Matisse.obtainResult(data));
             Log.e("OnActivityResult ", String.valueOf(Matisse.obtainOriginalState(data)));
         }
     }
@@ -160,11 +154,9 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
     private static class UriAdapter extends RecyclerView.Adapter<UriAdapter.UriViewHolder> {
 
         private List<Uri> mUris;
-        private List<String> mPaths;
 
-        void setData(List<Uri> uris, List<String> paths) {
+        void setData(List<Uri> uris) {
             mUris = uris;
-            mPaths = paths;
             notifyDataSetChanged();
         }
 
@@ -176,11 +168,9 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
 
         @Override
         public void onBindViewHolder(UriViewHolder holder, int position) {
+            Glide.with(holder.mPreview).load(mUris.get(position)).into(holder.mPreview);
             holder.mUri.setText(mUris.get(position).toString());
-            holder.mPath.setText(mPaths.get(position));
-
             holder.mUri.setAlpha(position % 2 == 0 ? 1.0f : 0.54f);
-            holder.mPath.setAlpha(position % 2 == 0 ? 1.0f : 0.54f);
         }
 
         @Override
@@ -190,13 +180,13 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
 
         static class UriViewHolder extends RecyclerView.ViewHolder {
 
+            private ImageView mPreview;
             private TextView mUri;
-            private TextView mPath;
 
             UriViewHolder(View contentView) {
                 super(contentView);
+                mPreview = contentView.findViewById(R.id.iv_preview);
                 mUri = (TextView) contentView.findViewById(R.id.uri);
-                mPath = (TextView) contentView.findViewById(R.id.path);
             }
         }
     }

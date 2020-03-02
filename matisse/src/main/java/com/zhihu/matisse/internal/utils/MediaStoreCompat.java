@@ -15,6 +15,7 @@
  */
 package com.zhihu.matisse.internal.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -48,6 +49,10 @@ public class MediaStoreCompat {
     private final WeakReference<Fragment> mFragment;
     private CaptureStrategy mCaptureStrategy;
     private Uri mCurrentPhotoUri;
+    /**
+     * @deprecated 只给Android Q以下刷新相册用的
+     */
+    @Deprecated
     private String mCurrentPhotoPath;
 
     public MediaStoreCompat(Activity activity) {
@@ -66,6 +71,7 @@ public class MediaStoreCompat {
      * @param context a context to check for camera feature.
      * @return true if the device has a camera feature. false otherwise.
      */
+    @SuppressLint("UnsupportedChromeOsCameraSystemFeature")
     public static boolean hasCameraFeature(Context context) {
         PackageManager pm = context.getApplicationContext().getPackageManager();
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
@@ -110,24 +116,16 @@ public class MediaStoreCompat {
 
     private Uri createUri(File photoFile) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            return FileProvider.getUriForFile(mContext.get(),
-                    mCaptureStrategy.authority, photoFile);
+            return FileProvider.getUriForFile(mContext.get(), mCaptureStrategy.authority, photoFile);
         } else {
             ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.TITLE, photoFile.getName());
+            values.put(MediaStore.Images.Media.TITLE, photoFile.getName() + ".jpg");
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, relativePath(photoFile));
+            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+            //}
             return mContext.get().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         }
-    }
-
-    private String relativePath(File file) {
-        /*if (!TextUtils.isEmpty(mCaptureStrategy.directory)) {
-            return Environment.DIRECTORY_PICTURES + File.separator + mCaptureStrategy.directory + File.separator + file.getName();
-        } else {
-            return Environment.DIRECTORY_PICTURES + File.separator + file.getName();
-        }*/
-        return Environment.DIRECTORY_PICTURES;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -137,13 +135,19 @@ public class MediaStoreCompat {
                 new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = String.format("JPEG_%s.jpg", timeStamp);
         File storageDir;
-        if (mCaptureStrategy.isPublic) {
+        if (mCaptureStrategy.isPublic && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             storageDir = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_PICTURES);
             if (!storageDir.exists()) storageDir.mkdirs();
         } else {
             storageDir = mContext.get().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         }
+
+        // Handle the situation that user's external storage is not ready
+        if (storageDir == null || !Environment.MEDIA_MOUNTED.equals(EnvironmentCompat.getStorageState(storageDir))) {
+            storageDir = mContext.get().getCacheDir();
+        }
+
         if (!TextUtils.isEmpty(mCaptureStrategy.directory)) {
             storageDir = new File(storageDir, mCaptureStrategy.directory);
             if (!storageDir.exists()) storageDir.mkdirs();
@@ -165,6 +169,10 @@ public class MediaStoreCompat {
         return mCurrentPhotoUri;
     }
 
+    /**
+     * @deprecated 只给Android Q以下刷新相册用的
+     */
+    @Deprecated
     public String getCurrentPhotoPath() {
         return mCurrentPhotoPath;
     }
