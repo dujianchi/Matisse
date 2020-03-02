@@ -19,6 +19,7 @@ package com.zhihu.matisse;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +31,6 @@ import com.zhihu.matisse.engine.ImageEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import com.zhihu.matisse.internal.entity.SelectionSpec;
-import com.zhihu.matisse.listener.OnCheckedListener;
 import com.zhihu.matisse.listener.OnSelectedListener;
 import com.zhihu.matisse.ui.MatisseActivity;
 
@@ -203,18 +203,6 @@ public final class SelectionCreator {
     }
 
     /**
-     * Show a original photo check options.Let users decide whether use original photo after select
-     *
-     * @param enable Whether to enable original photo or not
-     * @return {@link SelectionCreator} for fluent API.
-     */
-    public SelectionCreator originalEnable(boolean enable) {
-        mSelectionSpec.originalable = enable;
-        return this;
-    }
-
-
-    /**
      * Determines Whether to hide top and bottom toolbar in PreView mode ,when user tap the picture
      * @param enable
      * @return {@link SelectionCreator} for fluent API.
@@ -329,17 +317,6 @@ public final class SelectionCreator {
     @NonNull
     public SelectionCreator setOnSelectedListener(@Nullable OnSelectedListener listener) {
         mSelectionSpec.onSelectedListener = listener;
-        return this;
-    }
-
-    /**
-     * Set listener for callback immediately when user check or uncheck original.
-     *
-     * @param listener {@link OnSelectedListener}
-     * @return {@link SelectionCreator} for fluent API.
-     */
-    public SelectionCreator setOnCheckedListener(@Nullable OnCheckedListener listener) {
-        mSelectionSpec.onCheckedListener = listener;
         return this;
     }
 

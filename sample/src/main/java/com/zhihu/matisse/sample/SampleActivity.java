@@ -99,12 +99,8 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                             Log.e("onSelected", "onSelected: pathList=" + uriList);
                         })
                         .showSingleMediaType(true)
-                        .originalEnable(true)
                         .maxOriginalSize(10)
                         .autoHideToolbarOnSingleTap(true)
-                        .setOnCheckedListener(isChecked -> {
-                            Log.e("isChecked", "onCheck: isChecked=" + isChecked);
-                        })
                         .forResult(REQUEST_CODE_CHOOSE);
                 break;
             case R.id.dracula:
@@ -114,7 +110,6 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .countable(false)
                         .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
                         .maxSelectable(9)
-                        .originalEnable(true)
                         .maxOriginalSize(10)
                         .imageEngine(new GlideEngine())
                         .forResult(REQUEST_CODE_CHOOSE);
@@ -131,7 +126,6 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .thumbnailScale(0.85f)
                         .imageEngine(new GlideEngine())
                         .showSingleMediaType(true)
-                        .originalEnable(true)
                         .maxOriginalSize(10)
                         .autoHideToolbarOnSingleTap(true)
                         .forResult(REQUEST_CODE_CHOOSE);
@@ -147,7 +141,6 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             mAdapter.setData(Matisse.obtainResult(data));
-            Log.e("OnActivityResult ", String.valueOf(Matisse.obtainOriginalState(data)));
         }
     }
 

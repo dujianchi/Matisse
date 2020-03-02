@@ -16,6 +16,7 @@
 package com.zhihu.matisse.internal.ui;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.zhihu.matisse.internal.entity.Item;
@@ -45,7 +46,6 @@ public class SelectedPreviewActivity extends BasePreviewActivity {
             mCheckView.setChecked(true);
         }
         mPreviousPos = 0;
-        updateSize(selected.get(0));
     }
 
 }
