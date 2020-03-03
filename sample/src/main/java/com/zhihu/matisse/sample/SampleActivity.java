@@ -99,7 +99,6 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                             Log.e("onSelected", "onSelected: pathList=" + uriList);
                         })
                         .showSingleMediaType(true)
-                        .maxOriginalSize(10)
                         .autoHideToolbarOnSingleTap(true)
                         .forResult(REQUEST_CODE_CHOOSE);
                 break;
@@ -110,7 +109,6 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .countable(false)
                         .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
                         .maxSelectable(9)
-                        .maxOriginalSize(10)
                         .imageEngine(new GlideEngine())
                         .forResult(REQUEST_CODE_CHOOSE);
                 break;
@@ -126,7 +124,6 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .thumbnailScale(0.85f)
                         .imageEngine(new GlideEngine())
                         .showSingleMediaType(true)
-                        .maxOriginalSize(10)
                         .autoHideToolbarOnSingleTap(true)
                         .forResult(REQUEST_CODE_CHOOSE);
                 break;
