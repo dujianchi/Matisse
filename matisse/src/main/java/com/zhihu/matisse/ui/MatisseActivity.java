@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -57,6 +58,10 @@ import com.zhihu.matisse.internal.ui.widget.AlbumsSpinner;
 import com.zhihu.matisse.internal.utils.MediaStoreCompat;
 import com.zhihu.matisse.internal.utils.SingleMediaScanner;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
@@ -234,11 +239,34 @@ public class MatisseActivity extends AppCompatActivity implements
                 });
             } else {
                 ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, path.substring(path.lastIndexOf('/') + 1));
-                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+                values.put(MediaStore.Images.Media.TITLE, path.substring(path.lastIndexOf(File.separatorChar) + 1));
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
                 values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
                 Uri insert = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                Log.i("insert", "insert to " + insert);
+                InputStream inputStream = null;
+                OutputStream outputStream = null;
+                try {
+                    inputStream = getContentResolver().openInputStream(contentUri);
+                    outputStream = getContentResolver().openOutputStream(insert);
+                    FileUtils.copy(inputStream, outputStream);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (inputStream != null) {
+                        try {
+                            inputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (outputStream != null) {
+                        try {
+                            outputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
             finish();
         }

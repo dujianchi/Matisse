@@ -119,7 +119,7 @@ public class MediaStoreCompat {
         //} else {
         //    ContentValues values = new ContentValues();
         //    values.put(MediaStore.Images.Media.TITLE, photoFile.getName() + ".jpg");
-        //    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
+        //    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
         //    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         //    values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
         //    //}
