@@ -16,23 +16,87 @@
 package com.zhihu.matisse.internal.ui.widget;
 
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Px;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
-public class PreviewViewPager extends ViewPager {
+import com.zhihu.matisse.internal.entity.Item;
 
-    public PreviewViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
+public class PreviewViewPager extends RecyclerView {
+
+    private final PagerSnapHelper mSnapHelper;
+    private final LinearLayoutManager mLayoutManager;
+
+    private OnPageChangeListener mOnPageChangeListener;
+
+    public PreviewViewPager(@NonNull Context context) {
+        this(context, null, 0);
     }
 
+    public PreviewViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    @SuppressWarnings("deprecation")
+    public PreviewViewPager(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        mLayoutManager = new LinearLayoutManager(context, HORIZONTAL, false);
+        setLayoutManager(mLayoutManager);
+
+        mSnapHelper = new PagerSnapHelper();
+        mSnapHelper.attachToRecyclerView(this);
+
+        addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (mOnPageChangeListener != null) {
+                    mOnPageChangeListener.onPageSelected(getCurrentPosition());
+                }
+            }
+        });
+    }
+
+    /**
+     * @deprecated 不允许外部调用
+     */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Override
-    protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
-        if (v instanceof ImageViewTouch) {
-            return ((ImageViewTouch) v).canScroll(dx) || super.canScroll(v, checkV, dx, x, y);
-        }
-        return super.canScroll(v, checkV, dx, x, y);
+    @Deprecated
+    public void setLayoutManager(@Nullable LayoutManager layout) {
+        super.setLayoutManager(layout);
+    }
+
+    public final PagerSnapHelper getSnapHelper() {
+        return mSnapHelper;
+    }
+
+    public final void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
+        mOnPageChangeListener = onPageChangeListener;
+    }
+
+    public int getCurrentPosition() {
+        View snapView = mSnapHelper.findSnapView(mLayoutManager);
+        if (snapView == null) return 0;
+        int position = mLayoutManager.getPosition(snapView);
+        return Math.max(position, 0);
+    }
+
+    public interface OnPageChangeListener {
+
+        /**
+         * This method will be invoked when a new page becomes selected. Animation is not
+         * necessarily complete.
+         *
+         * @param position Position index of the new selected page.
+         */
+        void onPageSelected(int position);
+
     }
 }

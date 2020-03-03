@@ -56,18 +56,19 @@ public final class PhotoMetadataUtils {
         return size.x * size.y;
     }
 
-    public static Point getBitmapSize(Uri uri, Activity activity) {
-        ContentResolver resolver = activity.getContentResolver();
+    public static Point getBitmapSize(Uri uri, Context context) {
+        ContentResolver resolver = context.getContentResolver();
         Point imageSize = getBitmapBound(resolver, uri);
         int w = imageSize.x;
         int h = imageSize.y;
-        if (PhotoMetadataUtils.shouldRotate(activity, resolver, uri)) {
+        if (PhotoMetadataUtils.shouldRotate(context, resolver, uri)) {
             w = imageSize.y;
             h = imageSize.x;
         }
         if (h == 0) return new Point(MAX_WIDTH, MAX_WIDTH);
-        DisplayMetrics metrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        //DisplayMetrics metrics = new DisplayMetrics();
+        //activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         float screenWidth = (float) metrics.widthPixels;
         float screenHeight = (float) metrics.heightPixels;
         float widthScale = screenWidth / w;

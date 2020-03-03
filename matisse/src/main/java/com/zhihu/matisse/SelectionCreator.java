@@ -213,17 +213,6 @@ public final class SelectionCreator {
     }
 
     /**
-     * Maximum original size,the unit is MB. Only useful when {link@originalEnable} set true
-     *
-     * @param size Maximum original size. Default value is Integer.MAX_VALUE
-     * @return {@link SelectionCreator} for fluent API.
-     */
-    public SelectionCreator maxOriginalSize(int size) {
-        mSelectionSpec.originalMaxSize = size;
-        return this;
-    }
-
-    /**
      * Capture strategy provided for the location to save photos including internal and external
      * storage and also a authority for {@link androidx.core.content.FileProvider}.
      *

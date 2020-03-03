@@ -26,7 +26,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.viewpager.widget.ViewPager;
 
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.IncapableCause;
@@ -35,11 +34,12 @@ import com.zhihu.matisse.internal.entity.SelectionSpec;
 import com.zhihu.matisse.internal.model.SelectedItemCollection;
 import com.zhihu.matisse.internal.ui.adapter.PreviewPagerAdapter;
 import com.zhihu.matisse.internal.ui.widget.CheckView;
+import com.zhihu.matisse.internal.ui.widget.PreviewViewPager;
 import com.zhihu.matisse.internal.utils.Platform;
 import com.zhihu.matisse.listener.OnFragmentInteractionListener;
 
 public abstract class BasePreviewActivity extends AppCompatActivity implements View.OnClickListener,
-        ViewPager.OnPageChangeListener, OnFragmentInteractionListener {
+        PreviewViewPager.OnPageChangeListener, OnFragmentInteractionListener {
 
     public static final String EXTRA_DEFAULT_BUNDLE = "extra_default_bundle";
     public static final String EXTRA_RESULT_BUNDLE = "extra_result_bundle";
@@ -47,7 +47,7 @@ public abstract class BasePreviewActivity extends AppCompatActivity implements V
 
     protected final SelectedItemCollection mSelectedCollection = new SelectedItemCollection(this);
     protected SelectionSpec mSpec;
-    protected ViewPager mPager;
+    protected PreviewViewPager mPager;
 
     protected PreviewPagerAdapter mAdapter;
 
@@ -90,9 +90,9 @@ public abstract class BasePreviewActivity extends AppCompatActivity implements V
         mButtonBack.setOnClickListener(this);
         mButtonApply.setOnClickListener(this);
 
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.addOnPageChangeListener(this);
-        mAdapter = new PreviewPagerAdapter(getSupportFragmentManager(), null);
+        mPager = (PreviewViewPager) findViewById(R.id.pager);
+        mPager.setOnPageChangeListener(this);
+        mAdapter = new PreviewPagerAdapter(this);
         mPager.setAdapter(mAdapter);
         mCheckView = (CheckView) findViewById(R.id.check_view);
         mCheckView.setCountable(mSpec.countable);
@@ -103,7 +103,7 @@ public abstract class BasePreviewActivity extends AppCompatActivity implements V
 
             @Override
             public void onClick(View v) {
-                Item item = mAdapter.getMediaItem(mPager.getCurrentItem());
+                Item item = mAdapter.getMediaItem(mPager.getCurrentPosition());
                 if (mSelectedCollection.isSelected(item)) {
                     mSelectedCollection.remove(item);
                     if (mSpec.countable) {
@@ -186,17 +186,9 @@ public abstract class BasePreviewActivity extends AppCompatActivity implements V
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
     public void onPageSelected(int position) {
-        PreviewPagerAdapter adapter = (PreviewPagerAdapter) mPager.getAdapter();
         if (mPreviousPos != -1 && mPreviousPos != position) {
-            ((PreviewItemFragment) adapter.instantiateItem(mPager, mPreviousPos)).resetView();
-
-            Item item = adapter.getMediaItem(position);
+            Item item = mAdapter.getMediaItem(position);
             if (mSpec.countable) {
                 int checkedNum = mSelectedCollection.checkedNumOf(item);
                 mCheckView.setCheckedNum(checkedNum);
@@ -216,11 +208,6 @@ public abstract class BasePreviewActivity extends AppCompatActivity implements V
             }
         }
         mPreviousPos = position;
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
     }
 
     private void updateApplyButton() {

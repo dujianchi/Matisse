@@ -85,7 +85,7 @@ public class AlbumPreviewActivity extends BasePreviewActivity implements
             mIsAlreadySetPosition = true;
             Item selected = getIntent().getParcelableExtra(EXTRA_ITEM);
             int selectedIndex = items.indexOf(selected);
-            mPager.setCurrentItem(selectedIndex, false);
+            mPager.scrollToPosition(selectedIndex);
             mPreviousPos = selectedIndex;
         }
     }
