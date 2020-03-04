@@ -22,6 +22,7 @@ import android.graphics.Point;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,9 +36,6 @@ import com.zhihu.matisse.listener.OnFragmentInteractionListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 public class PreviewPagerAdapter extends RecyclerView.Adapter<PreviewPagerAdapter.PreviewViewHolder> {
 
@@ -81,7 +79,7 @@ public class PreviewPagerAdapter extends RecyclerView.Adapter<PreviewPagerAdapte
             holder.videoPlayButton.setVisibility(View.GONE);
         }
 
-        holder.image.resetMatrix();
+        /*holder.image.resetMatrix();
         holder.image.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
         holder.image.setSingleTapListener(new ImageViewTouch.OnImageViewTouchSingleTapListener() {
@@ -91,7 +89,7 @@ public class PreviewPagerAdapter extends RecyclerView.Adapter<PreviewPagerAdapte
                     mListener.onClick();
                 }
             }
-        });
+        });*/
 
         Point size = PhotoMetadataUtils.getBitmapSize(item.getContentUri(), context);
         if (item.isGif()) {
@@ -116,12 +114,12 @@ public class PreviewPagerAdapter extends RecyclerView.Adapter<PreviewPagerAdapte
 
     public static class PreviewViewHolder extends RecyclerView.ViewHolder {
         View videoPlayButton;
-        ImageViewTouch image;
+        ImageView image;
 
         public PreviewViewHolder(@NonNull View itemView) {
             super(itemView);
             videoPlayButton = itemView.findViewById(R.id.video_play_button);
-            image = (ImageViewTouch) itemView.findViewById(R.id.image_view);
+            image = (ImageView) itemView.findViewById(R.id.image_view);
         }
     }
 
