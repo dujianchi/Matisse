@@ -18,13 +18,15 @@ package com.zhihu.matisse.internal.ui;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Album;
@@ -48,6 +50,7 @@ public class MediaSelectionFragment extends Fragment implements
     private SelectionProvider mSelectionProvider;
     private AlbumMediaAdapter.CheckStateListener mCheckStateListener;
     private AlbumMediaAdapter.OnMediaClickListener mOnMediaClickListener;
+    private SelectionSpec mSelectionSpec;
 
     public static MediaSelectionFragment newInstance(Album album) {
         MediaSelectionFragment fragment = new MediaSelectionFragment();
@@ -84,6 +87,18 @@ public class MediaSelectionFragment extends Fragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (mSelectionSpec != null && mSelectionSpec.pauseOnScrolling) {
+                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                        mSelectionSpec.imageEngine.pauseRequests(getContext());
+                    } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        mSelectionSpec.imageEngine.resumeRequests(getContext());
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -98,11 +113,11 @@ public class MediaSelectionFragment extends Fragment implements
         mRecyclerView.setHasFixedSize(true);
 
         int spanCount;
-        SelectionSpec selectionSpec = SelectionSpec.getInstance();
-        if (selectionSpec.gridExpectedSize > 0) {
-            spanCount = UIUtils.spanCount(getContext(), selectionSpec.gridExpectedSize);
+        mSelectionSpec = SelectionSpec.getInstance();
+        if (mSelectionSpec.gridExpectedSize > 0) {
+            spanCount = UIUtils.spanCount(getContext(), mSelectionSpec.gridExpectedSize);
         } else {
-            spanCount = selectionSpec.spanCount;
+            spanCount = mSelectionSpec.spanCount;
         }
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), spanCount));
 
@@ -110,7 +125,7 @@ public class MediaSelectionFragment extends Fragment implements
         mRecyclerView.addItemDecoration(new MediaGridInset(spanCount, spacing, false));
         mRecyclerView.setAdapter(mAdapter);
         mAlbumMediaCollection.onCreate(getActivity(), this);
-        mAlbumMediaCollection.load(album, selectionSpec.capture);
+        mAlbumMediaCollection.load(album, mSelectionSpec.capture);
     }
 
     @Override

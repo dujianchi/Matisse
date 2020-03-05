@@ -95,6 +95,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                         .thumbnailScale(0.85f)
                         .imageEngine(new GlideEngine())
+                        .pauseOnScrolling(true)
                         .setOnSelectedListener((uriList) -> {
                             Log.e("onSelected", "onSelected: pathList=" + uriList);
                         })

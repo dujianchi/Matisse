@@ -82,7 +82,9 @@ public class MatisseActivity extends AppCompatActivity implements
 //    public static final String EXTRA_RESULT_SELECTION_PATH = "extra_result_selection_path";
     private static final int REQUEST_CODE_PREVIEW = 23;
     private static final int REQUEST_CODE_CAPTURE = 24;
-    public static final String CHECK_STATE = "checkState";
+
+    private static Handler sHandler = new Handler(Looper.getMainLooper());
+
     private final AlbumCollection mAlbumCollection = new AlbumCollection();
     private MediaStoreCompat mMediaStoreCompat;
     private SelectedItemCollection mSelectedCollection = new SelectedItemCollection(this);
@@ -327,8 +329,7 @@ public class MatisseActivity extends AppCompatActivity implements
     public void onAlbumLoad(final Cursor cursor) {
         mAlbumsAdapter.swapCursor(cursor);
         // select default album.
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        sHandler.post(new Runnable() {
 
             @Override
             public void run() {

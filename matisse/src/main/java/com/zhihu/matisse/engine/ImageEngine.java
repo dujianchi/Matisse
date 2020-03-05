@@ -79,4 +79,14 @@ public interface ImageEngine {
      * @return true support animated gif, false do not support animated gif.
      */
     boolean supportAnimatedGif();
+
+    /**
+     * 用于在滚动的时候停止加载图片
+     */
+    void pauseRequests(Context context);
+
+    /**
+     * 用于在停止滚动的时候恢复加载图片
+     */
+    void resumeRequests(Context context);
 }

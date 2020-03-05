@@ -84,4 +84,14 @@ public class GlideEngine implements ImageEngine {
         return true;
     }
 
+    @Override
+    public void pauseRequests(Context context) {
+        Glide.with(context).pauseRequests();
+    }
+
+    @Override
+    public void resumeRequests(Context context) {
+        Glide.with(context).resumeRequests();
+    }
+
 }

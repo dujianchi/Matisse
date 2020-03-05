@@ -53,6 +53,7 @@ public final class SelectionSpec {
     public OnSelectedListener onSelectedListener;
     public boolean autoHideToobar;
     public boolean showPreview;
+    public boolean pauseOnScrolling;
 
     private SelectionSpec() {
     }
@@ -87,6 +88,7 @@ public final class SelectionSpec {
         hasInited = true;
         autoHideToobar = false;
         showPreview = true;
+        pauseOnScrolling = false;
     }
 
     public boolean singleSelectionModeEnabled() {
