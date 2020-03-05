@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
@@ -52,6 +53,8 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CrashReport.initCrashReport(getApplicationContext(), "01428df188", false);
+
         setContentView(R.layout.activity_main);
         findViewById(R.id.zhihu).setOnClickListener(this);
         findViewById(R.id.dracula).setOnClickListener(this);
@@ -126,6 +129,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .imageEngine(new GlideEngine())
                         .showSingleMediaType(true)
                         .autoHideToolbarOnSingleTap(true)
+                        .pauseOnScrolling(true)
                         .forResult(REQUEST_CODE_CHOOSE);
                 break;
             default:
