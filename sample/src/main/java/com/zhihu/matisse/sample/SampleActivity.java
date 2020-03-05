@@ -86,7 +86,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.zhihu:
                 Matisse.from(SampleActivity.this)
-                        .choose(MimeType.ofImage(), false)
+                        .choose(MimeType.ofAll(), false)
                         .countable(true)
                         .capture(true)
                         .captureStrategy(
@@ -102,11 +102,11 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .setOnSelectedListener((uriList) -> {
                             Log.e("onSelected", "onSelected: pathList=" + uriList);
                         })
-                        .showSingleMediaType(true)
+                        .showSingleMediaType(false)
                         .autoHideToolbarOnSingleTap(true)
                         .forResult(REQUEST_CODE_CHOOSE);
                 break;
-            case R.id.dracula:
+            /*case R.id.dracula:
                 Matisse.from(SampleActivity.this)
                         .choose(MimeType.ofImage())
                         .theme(R.style.Matisse_Dracula)
@@ -131,7 +131,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                         .autoHideToolbarOnSingleTap(true)
                         .pauseOnScrolling(true)
                         .forResult(REQUEST_CODE_CHOOSE);
-                break;
+                break;*/
             default:
                 break;
         }
